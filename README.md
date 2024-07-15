@@ -1,0 +1,1 @@
+# buffer-closer.nvim
