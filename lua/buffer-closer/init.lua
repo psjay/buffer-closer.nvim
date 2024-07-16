@@ -9,6 +9,26 @@ M.config = {
 local function close_buffer_or_window_or_exit()
 	local current_buf = vim.api.nvim_get_current_buf()
 	local current_win = vim.api.nvim_get_current_win()
+	local windows_with_buffer = vim.fn.win_findbuf(current_buf)
+	-- Function to count visible windows
+	local function count_visible_windows()
+		local count = 0
+		for _, win in ipairs(vim.api.nvim_list_wins()) do
+			if vim.api.nvim_win_get_config(win).relative == "" then
+				count = count + 1
+			end
+		end
+		return count
+	end
+
+	-- If the buffer is displayed in multiple visible windows, close only the current window
+	if #windows_with_buffer > 1 then
+		if count_visible_windows() > 1 then
+			vim.api.nvim_win_close(current_win, false)
+			return
+		end
+	end
+
 	local listed_buffers = vim.tbl_filter(function(b)
 		return vim.bo[b].buflisted and vim.api.nvim_buf_is_valid(b)
 	end, vim.api.nvim_list_bufs())
