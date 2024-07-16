@@ -1,4 +1,4 @@
-*buffer-closer.txt*  For Neovim version 0.5+  Last change: 2024 July 16
+*buffer-closer.txt*  For Neovim version 0.5+  Last change: 2024 July 17
 
 ==============================================================================
 Table of Contents                                *buffer-closer-toc*
@@ -7,7 +7,8 @@ Table of Contents                                *buffer-closer-toc*
 2. Installation                   |buffer-closer-installation|
 3. Configuration                  |buffer-closer-configuration|
 4. Usage                          |buffer-closer-usage|
-5. License                        |buffer-closer-license|
+5. Commands                       |buffer-closer-commands|
+6. License                        |buffer-closer-license|
 
 ==============================================================================
 1. Introduction                                  *buffer-closer-introduction*
@@ -46,7 +47,19 @@ mappings for normal file buffers. Press the configured `close_key` (default:
 3. Exit Vim if it's the last buffer
 
 ==============================================================================
-5. License                                       *buffer-closer-license*
+5. Commands                                      *buffer-closer-commands*
+
+Buffer Closer provides the following user commands:
+
+:BuffClsDisable                                  *:BuffClsDisable*
+    Temporarily disables the Buffer Closer plugin. When disabled, the
+    `close_key` will perform its default Neovim action.
+
+:BuffClsEnable                                   *:BuffClsEnable*
+    Re-enables the Buffer Closer plugin after it has been disabled.
+
+==============================================================================
+6. License                                       *buffer-closer-license*
 
 MIT License. See |license| or the LICENSE file for details.
 

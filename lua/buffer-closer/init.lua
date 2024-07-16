@@ -1,4 +1,5 @@
 local M = {}
+M.enabled = true
 
 -- Default configuration
 M.config = {
@@ -78,7 +79,8 @@ local function close_buffer_or_window_or_exit()
 			vim.cmd("bdelete " .. current_buf)
 		end)
 		if not ok then
-			vim.notify("Failed to close buffer: " .. err, vim.log.levels.ERROR)
+			vim.api.nvim_win_set_buf(current_win, current_buf)
+			vim.notify("Failed to close buffer: " .. err, vim.log.levels.WARN)
 		end
 	end
 
@@ -97,13 +99,19 @@ end
 -- Function to set up the key mapping for a buffer
 local function setup_buffer_mapping(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	-- Check if the buffer is a normal file buffer
 	local buf_type = vim.bo[bufnr].buftype
 	local buf_listed = vim.bo[bufnr].buflisted
 	if buf_type == "" and buf_listed then
-		-- vim.notify(table.concat(vim.tbl_map(tostring, { bufnr, " ", buf_type, " ", buf_listed })))
 		vim.api.nvim_buf_set_keymap(bufnr, "n", M.config.close_key, "", {
-			callback = close_buffer_or_window_or_exit,
+			callback = function()
+				if M.enabled then
+					close_buffer_or_window_or_exit()
+				else
+					-- Execute the default behavior when plugin is disabled
+					local default_action = vim.api.nvim_replace_termcodes(M.config.close_key, true, false, true)
+					vim.api.nvim_feedkeys(default_action, "n", false)
+				end
+			end,
 			noremap = true,
 			silent = true,
 		})
@@ -120,12 +128,26 @@ local function setup_autocommands()
 	})
 end
 
+-- Add these new functions
+local function disable_plugin()
+	M.enabled = false
+	vim.notify("Buffer Closer disabled.", vim.log.levels.INFO)
+end
+
+local function enable_plugin()
+	M.enabled = true
+	vim.notify("Buffer Closer enabled.", vim.log.levels.INFO)
+end
+
 -- Function to set up the plugin
 function M.setup(opts)
 	M.config = vim.tbl_deep_extend("force", M.config, opts or {})
 	setup_autocommands()
 	-- Set up mapping for the current buffer
 	setup_buffer_mapping()
+	-- Add user commands
+	vim.api.nvim_create_user_command("BuffClsDisable", disable_plugin, {})
+	vim.api.nvim_create_user_command("BuffClsEnable", enable_plugin, {})
 end
 
 return M
