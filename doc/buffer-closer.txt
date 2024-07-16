@@ -28,7 +28,7 @@ To configure the plugin, call the `setup` function in your Neovim
 configuration:
 >
     require('buffer-closer').setup({
-      close_key = 'q', -- Default key to close buffer/window
+      close_key = 'q',
     })
 <
 Options:
@@ -41,8 +41,9 @@ Once installed and configured, the plugin will automatically set up key
 mappings for normal file buffers. Press the configured `close_key` (default:
 'q') in normal mode to:
 
-1. Close the current buffer if there are multiple buffers open
-2. Exit Vim if it's the last buffer
+1. Close the current window if there are multiple windows opening the current buffer
+2. Close the current buffer if there are multiple buffers open
+3. Exit Vim if it's the last buffer
 
 ==============================================================================
 5. License                                       *buffer-closer-license*
