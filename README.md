@@ -1,6 +1,6 @@
 # Buffer Closer
 
-A NeoVim plugin that provides a convenient way to close buffers, windows, or exit Vim with a single keypress.
+A Neovim plugin that provides a convenient way to close buffers, windows, or exit Vim with a single keypress.
 
 ## Features
 
@@ -48,7 +48,7 @@ Add the following to your Neovim configuration:
 
 ## Configuration
 
-To configure the plugin, call the `setup` function in your NeoVim configuration:
+To configure the plugin, call the `setup` function in your Neovim configuration:
 
 ```lua
 require('buffer-closer').setup({
