@@ -1,0 +1,53 @@
+*buffer-closer.txt*  For Neovim version 0.5+  Last change: 2024 July 16
+
+==============================================================================
+Table of Contents                                *buffer-closer-toc*
+
+1. Introduction                   |buffer-closer-introduction|
+2. Installation                   |buffer-closer-installation|
+3. Configuration                  |buffer-closer-configuration|
+4. Usage                          |buffer-closer-usage|
+5. License                        |buffer-closer-license|
+
+==============================================================================
+1. Introduction                                  *buffer-closer-introduction*
+
+Buffer Closer is a Neovim plugin that provides a convenient way to close
+buffers, windows, or exit Vim with a single keypress.
+
+==============================================================================
+2. Installation                                  *buffer-closer-installation*
+
+You can install this plugin using your preferred package manager. For detailed
+installation instructions, please refer to the README.md file.
+
+==============================================================================
+3. Configuration                                 *buffer-closer-configuration*
+
+To configure the plugin, call the `setup` function in your Neovim
+configuration:
+>
+    require('buffer-closer').setup({
+      close_key = 'q', -- Default key to close buffer/window
+    })
+<
+Options:
+- `close_key`: The key to use for closing buffers/windows. Default is 'q'.
+
+==============================================================================
+4. Usage                                         *buffer-closer-usage*
+
+Once installed and configured, the plugin will automatically set up key
+mappings for normal file buffers. Press the configured `close_key` (default:
+'q') in normal mode to:
+
+1. Close the current buffer if there are multiple buffers open
+2. Exit Vim if it's the last buffer
+
+==============================================================================
+5. License                                       *buffer-closer-license*
+
+MIT License. See |license| or the LICENSE file for details.
+
+==============================================================================
+vim:ft=help:norl:
