@@ -16,19 +16,30 @@ local function close_buffer_or_window_or_exit()
 	-- Function to find the next valid buffer
 	local function find_next_buffer()
 		local alternate = vim.fn.bufnr("#")
-		if
-			alternate ~= -1
-			and vim.api.nvim_buf_is_valid(alternate)
-			and vim.bo[alternate].buflisted
-			and alternate ~= current_buf
-		then
+		if alternate ~= -1 and vim.api.nvim_buf_is_valid(alternate) and vim.bo[alternate].buflisted then
 			return alternate
 		end
-		for _, buf in ipairs(listed_buffers) do
-			if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) then
-				return buf
+
+		-- Get buffer history
+		local buffer_history = {}
+		for i = 1, vim.fn.bufnr("$") do
+			if vim.api.nvim_buf_is_valid(i) and vim.bo[i].buflisted then
+				table.insert(buffer_history, { bufnr = i, lastused = vim.fn.getbufinfo(i)[1].lastused })
 			end
 		end
+
+		-- Sort buffers by last used time
+		table.sort(buffer_history, function(a, b)
+			return a.lastused > b.lastused
+		end)
+
+		-- Find the most recently used buffer that's not the current one
+		for _, buf in ipairs(buffer_history) do
+			if buf.bufnr ~= current_buf then
+				return buf.bufnr
+			end
+		end
+
 		return nil
 	end
 
