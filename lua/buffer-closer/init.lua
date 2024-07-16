@@ -101,6 +101,7 @@ local function setup_buffer_mapping(bufnr)
 	local buf_type = vim.bo[bufnr].buftype
 	local buf_listed = vim.bo[bufnr].buflisted
 	if buf_type == "" and buf_listed then
+		-- vim.notify(table.concat(vim.tbl_map(tostring, { bufnr, " ", buf_type, " ", buf_listed })))
 		vim.api.nvim_buf_set_keymap(bufnr, "n", M.config.close_key, "", {
 			callback = close_buffer_or_window_or_exit,
 			noremap = true,
@@ -111,7 +112,7 @@ end
 
 -- Function to set up autocommands
 local function setup_autocommands()
-	vim.api.nvim_create_autocmd({ "BufEnter", "BufAdd" }, {
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		group = vim.api.nvim_create_augroup("BufferCloserMapping", { clear = true }),
 		callback = function(ev)
 			setup_buffer_mapping(ev.buf)
