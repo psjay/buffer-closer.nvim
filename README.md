@@ -4,6 +4,7 @@ A Neovim plugin that provides a convenient way to close buffers, windows, or exi
 
 ## Features
 
+- Close the current window if there are multiple windows opening the current buffer
 - Close the current buffer if there are multiple buffers open
 - Exit Vim if it's the last buffer
 - Automatically sets up key mappings for normal file buffers
@@ -64,8 +65,9 @@ require('buffer-closer').setup({
 
 Once installed and configured, the plugin will automatically set up key mappings for normal file buffers. Press the configured `close_key` (default: 'q') in normal mode to:
 
-1. Close the current buffer if there are multiple buffers open
-2. Exit Vim if it's the last buffer
+1. Close the current window if there are multiple windows opening the current buffer
+2. Close the current buffer if there are multiple buffers open
+3. Exit Vim if it's the last buffer
 
 ## License
 
