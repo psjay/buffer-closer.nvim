@@ -4,6 +4,12 @@ A Neovim plugin that provides a convenient way to close buffers, windows, or exi
 
 ## Features
 
+
+
+https://github.com/user-attachments/assets/067f2503-2e00-4dcc-bc97-d1b74d544b1a
+
+
+
 - Close the current window if there are multiple windows opening the current buffer
 - Close the current buffer if there are multiple buffers open
 - Exit Vim if it's the last buffer
