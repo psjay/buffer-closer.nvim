@@ -75,8 +75,8 @@ Once installed and configured, the plugin will automatically set up key mappings
 
 Buffer Closer provides two user commands to enable or disable the plugin functionality:
 
-:`BuffClsDisable`: Temporarily disables the Buffer Closer plugin. When disabled, the close_key will perform its default Neovim action.
-:`BuffClsEnable`: Re-enables the Buffer Closer plugin after it has been disabled.
+- :`BuffClsDisable`: Temporarily disables the Buffer Closer plugin. When disabled, the close_key will perform its default Neovim action.
+- :`BuffClsEnable`: Re-enables the Buffer Closer plugin after it has been disabled.
 
 ## License
 
