@@ -78,7 +78,7 @@ local function close_buffer_or_window_or_exit()
 		local ok, err = pcall(function()
 			vim.cmd("bdelete " .. current_buf)
 		end)
-		if not ok then
+		if (not ok) and vim.bo[current_buf].buflisted then
 			vim.api.nvim_win_set_buf(current_win, current_buf)
 			vim.notify("Failed to close buffer: " .. err, vim.log.levels.WARN)
 		end
