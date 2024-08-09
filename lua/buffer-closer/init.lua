@@ -114,6 +114,7 @@ local function setup_buffer_mapping(bufnr)
 			end,
 			noremap = true,
 			silent = true,
+			desc = "Close or quit",
 		})
 	end
 end
