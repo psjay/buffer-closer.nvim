@@ -35,30 +35,71 @@ local function close_buffer_or_window_or_exit()
 		return vim.bo[b].buflisted and vim.api.nvim_buf_is_valid(b)
 	end, vim.api.nvim_list_bufs())
 
-	-- Function to find the next valid buffer
+	---
+	-- Finds the next buffer to jump to after closing the current one.
+	-- Priority: 1. Alternate buffer (#), 2. Most recently used, 3. Next listed buffer (as per :bnext)
+	--
+	-- @return integer|nil The buffer number to jump to, or nil if none is found.
+	--
 	local function find_next_buffer()
-		-- First try alternate buffer
-		local alternate = vim.fn.bufnr("#")
-		if alternate ~= -1 and vim.api.nvim_buf_is_valid(alternate) and vim.bo[alternate].buflisted then
-			return alternate
-		end
+	    local current_buf = vim.api.nvim_get_current_buf()
 
-		-- Then try the most recently used buffer
-		local mru_buf = nil
-		local max_lastused = 0
-		for _, buf in ipairs(listed_buffers) do
-			if buf ~= current_buf then
-				local lastused = vim.fn.getbufinfo(buf)[1].lastused
-				if lastused > max_lastused then
-					max_lastused = lastused
-					mru_buf = buf
-				end
-			end
-		end
+	    -- We'll create our own list of valid, listed buffers to work with.
+	    -- This is more robust than relying on a potentially external `listed_buffers` variable.
+	    local listed_buffers = vim.tbl_filter(
+		function(buf) return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted end,
+		vim.api.nvim_list_bufs()
+	    )
 
+	    -- Priority 1: First, try the alternate buffer (#)
+	    local alternate = vim.fn.bufnr("#")
+	    if alternate ~= -1 and alternate ~= current_buf and vim.api.nvim_buf_is_valid(alternate) and vim.bo[alternate].buflisted then
+		return alternate
+	    end
+
+	    -- Priority 2: Then, try the most recently used buffer
+	    local mru_buf = nil
+	    local max_lastused = 0
+	    for _, buf in ipairs(listed_buffers) do
+		if buf ~= current_buf then
+		    local info = vim.fn.getbufinfo(buf)
+		    -- getbufinfo returns a list, so we check if it's not empty.
+		    if #info > 0 and info[1].lastused > max_lastused then
+			max_lastused = info[1].lastused
+			mru_buf = buf
+		    end
+		end
+	    end
+
+	    if mru_buf then
 		return mru_buf
-	end
+	    end
 
+	    -- Priority 3 (NEW): Finally, if no alternate or MRU buffer is found,
+	    -- jump to the next listed buffer in numerical order, wrapping around.
+	    -- This mimics the behavior of :bnext.
+	    
+	    -- Sort the listed buffer numbers
+	    table.sort(listed_buffers)
+
+	    -- Find the current buffer's position in the sorted list
+	    local next_buf_nr = nil
+	    for i, buf_nr in ipairs(listed_buffers) do
+		if buf_nr == current_buf then
+		    -- Check if there's a buffer after the current one in the list
+		    if i < #listed_buffers then
+			next_buf_nr = listed_buffers[i + 1]
+		    else
+			-- If we are at the end, wrap around to the first buffer
+			next_buf_nr = listed_buffers[1]
+		    end
+		    break -- Exit the loop once we find our position
+		end
+	    end
+	    
+	    -- Return the found buffer number (or nil if the list is empty/only contains the current buffer)
+	    return next_buf_nr
+	end
 	-- Function to safely close buffer
 	local function close_buffer()
 		local next_buf = find_next_buffer()
